@@ -10,6 +10,11 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
+
+    
+    public int getId() {
+        return id;
+    }
     private String name;
 
     
