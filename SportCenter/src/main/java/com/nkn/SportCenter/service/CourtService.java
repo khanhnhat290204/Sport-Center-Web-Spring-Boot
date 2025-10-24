@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.nkn.SportCenter.dto.request.CourtRequest;
 import com.nkn.SportCenter.entities.Category;
 import com.nkn.SportCenter.entities.Court;
+import com.nkn.SportCenter.mapper.CourtMapper;
 import com.nkn.SportCenter.repository.CategoryRepository;
 import com.nkn.SportCenter.repository.CourtRepository;
 
@@ -18,16 +19,15 @@ public class CourtService {
     private CourtRepository courtRepo;
     @Autowired
     private CategoryRepository cateRepo;
+    @Autowired
+    private CourtMapper courtMapper;
 
     public Court createCourt(CourtRequest request){
-        Court court=new Court(); 
+        Court court=this.courtMapper.toCourt(request);
         Optional<Category> cate_object=this.cateRepo.findById(request.getCategory());
         Category cate=cate_object.get();
-        court.setPrice(request.getPrice());
         court.setCategory(cate);
-        court.setCourt_status(request.getCourt_status());
-        court.setDescription(request.getDescription());
-        
+    
         return this.courtRepo.save(court);
     }
 

@@ -1,59 +1,37 @@
-package com.nkn.SportCenter.entities;
+package com.nkn.SportCenter.dto.request;
 
 import java.time.LocalDate;
-import java.util.Date;
 
+import com.nkn.SportCenter.entities.BookingStatus;
+import com.nkn.SportCenter.entities.BookingType;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-
-@Entity
-public class Booking {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int id;
-    @ManyToOne
-    private Court court;
-    @ManyToOne
-    private User user;
-    @ManyToOne
-    private Time_slot time_slot;
+public class BookingRequest {
+    private int court;
+    private int user;
+    private int time_slot;
     private LocalDate booking_date;
     private double total_price;
     private double deposit_amount;
-    @Enumerated(EnumType.STRING)
     private BookingType booking_type;
-    @Enumerated(EnumType.STRING)
     private BookingStatus booking_status;
 
     
-    public int getId() {
-        return id;
-    }
-    public void setId(int id) {
-        this.id = id;
-    }
-    public Court getCourt() {
+    public int getCourt() {
         return court;
     }
-    public void setCourt(Court court) {
+    public void setCourt(int court) {
         this.court = court;
     }
-    public User getUser() {
+    public int getUser() {
         return user;
     }
-    public void setUser(User user) {
+    public void setUser(int user) {
         this.user = user;
     }
-    public Time_slot getTime_slot() {
+    public int getTime_slot() {
         return time_slot;
     }
-    public void setTime_slot(Time_slot time_slot) {
+    public void setTime_slot(int time_slot) {
         this.time_slot = time_slot;
     }
     public LocalDate getBooking_date() {
@@ -86,6 +64,4 @@ public class Booking {
     public void setBooking_status(BookingStatus booking_status) {
         this.booking_status = booking_status;
     }
-
-    
 }

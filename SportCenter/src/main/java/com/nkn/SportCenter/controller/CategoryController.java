@@ -19,6 +19,7 @@ public class CategoryController {
 
     @PostMapping("/category")
     Category createCate(@RequestBody CategoryRequest request){
+        System.err.println(request.getName());
         return cateService.createCate(request);
     }
 
