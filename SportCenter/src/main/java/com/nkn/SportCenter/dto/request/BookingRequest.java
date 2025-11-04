@@ -1,6 +1,7 @@
 package com.nkn.SportCenter.dto.request;
 
 import java.time.LocalDate;
+import java.util.List;
 
 import com.nkn.SportCenter.entities.BookingStatus;
 import com.nkn.SportCenter.entities.BookingType;
@@ -8,14 +9,19 @@ import com.nkn.SportCenter.entities.BookingType;
 public class BookingRequest {
     private int court;
     private int user;
-    private int time_slot;
+    private List<Integer> time_slot;
     private LocalDate booking_date;
     private double total_price;
     private double deposit_amount;
     private BookingType booking_type;
     private BookingStatus booking_status;
 
-    
+    public List<Integer> getTime_slot() {
+        return time_slot;
+    }
+    public void setTime_slot(List<Integer> time_slot) {
+        this.time_slot = time_slot;
+    }
     public int getCourt() {
         return court;
     }
@@ -27,12 +33,6 @@ public class BookingRequest {
     }
     public void setUser(int user) {
         this.user = user;
-    }
-    public int getTime_slot() {
-        return time_slot;
-    }
-    public void setTime_slot(int time_slot) {
-        this.time_slot = time_slot;
     }
     public LocalDate getBooking_date() {
         return booking_date;

@@ -11,5 +11,6 @@ public interface BookingMapper {
     @Mapping(target = "court", ignore = true)
     @Mapping(target = "user", ignore = true)
     @Mapping(target = "time_slot", ignore = true)
+    @Mapping(target = "created_at",ignore = true)
     Booking toBooking(BookingRequest request);
 }

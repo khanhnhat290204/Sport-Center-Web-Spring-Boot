@@ -1,9 +1,12 @@
 package com.nkn.SportCenter.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
-import com.nkn.SportCenter.entities.Time_slot;
+import com.nkn.SportCenter.entities.TimeSlot;
 
-public interface TimeSlotRepository extends JpaRepository<Time_slot,Integer> {
+
+@Repository
+public interface TimeSlotRepository extends JpaRepository<TimeSlot,Integer> {
 
 }

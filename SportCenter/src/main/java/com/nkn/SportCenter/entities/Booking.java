@@ -1,8 +1,9 @@
 package com.nkn.SportCenter.entities;
 
 import java.time.LocalDate;
-import java.util.Date;
+import java.util.List;
 
+import org.hibernate.annotations.CreationTimestamp;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -10,6 +11,9 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 
 @Entity
@@ -21,22 +25,38 @@ public class Booking {
     private Court court;
     @ManyToOne
     private User user;
-    @ManyToOne
-    private Time_slot time_slot;
+    @ManyToMany
+    @JoinTable(
+    name = "booking_time_slot",
+    joinColumns = @JoinColumn(name = "booking_id"),
+    inverseJoinColumns = @JoinColumn(name = "time_slot_id")
+    )
+    private List<TimeSlot> time_slot;
     private LocalDate booking_date;
     private double total_price;
     private double deposit_amount;
+    @CreationTimestamp
+    private LocalDate created_at;
     @Enumerated(EnumType.STRING)
     private BookingType booking_type;
     @Enumerated(EnumType.STRING)
-    private BookingStatus booking_status;
+    private BookingStatus booking_status=BookingStatus.PENDING; 
 
-    
+
+    public LocalDate getCreated_at() {
+        return created_at;
+    }
+    public void setCreated_at(LocalDate created_at) {
+        this.created_at = created_at;
+    }
+    public List<TimeSlot> getTime_slot() {
+        return time_slot;
+    }
+    public void setTime_slot(List<TimeSlot> time_slot) {
+        this.time_slot = time_slot;
+    }
     public int getId() {
         return id;
-    }
-    public void setId(int id) {
-        this.id = id;
     }
     public Court getCourt() {
         return court;
@@ -49,12 +69,6 @@ public class Booking {
     }
     public void setUser(User user) {
         this.user = user;
-    }
-    public Time_slot getTime_slot() {
-        return time_slot;
-    }
-    public void setTime_slot(Time_slot time_slot) {
-        this.time_slot = time_slot;
     }
     public LocalDate getBooking_date() {
         return booking_date;

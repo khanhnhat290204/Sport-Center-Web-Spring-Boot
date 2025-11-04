@@ -34,4 +34,10 @@ public class CourtService {
     public List<Court> getAllCourt(){
         return this.courtRepo.findAll();
     }
+
+    public Court findCourtById(int id){
+        Optional<Court> court_object= this.courtRepo.findById(id);
+        Court court=court_object.get();
+        return court;
+    }
 }
