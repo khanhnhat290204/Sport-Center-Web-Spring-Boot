@@ -1,10 +1,12 @@
 package com.nkn.SportCenter.service;
 
+import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,9 +15,13 @@ import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
 import com.nimbusds.jose.JWSHeader;
 import com.nimbusds.jose.JWSObject;
+import com.nimbusds.jose.JWSVerifier;
 import com.nimbusds.jose.Payload;
 import com.nimbusds.jose.crypto.MACSigner;
+import com.nimbusds.jose.crypto.MACVerifier;
 import com.nimbusds.jwt.JWTClaimsSet;
+import com.nimbusds.jwt.SignedJWT;
+import com.nkn.SportCenter.dto.request.IntrospectRequest;
 import com.nkn.SportCenter.entities.User;
 import com.nkn.SportCenter.repository.UserRepository;
 
@@ -24,7 +30,8 @@ public class AuthenticationService {
     @Autowired
     private UserRepository userRepo;
 
-    protected static final String SINGER_KEY="5a5636d96b4d43386e9f241c693d0c0b37f259339d17795c225694afb58882d1";
+    @Value("${jwt.signerKey}")
+    protected String SINGER_KEY;
 
     public String authUser(String username,String password){
         User user =this.userRepo.findByUsername(username);
@@ -32,6 +39,10 @@ public class AuthenticationService {
 
         boolean authenticated= passwordEncoder.matches(password,user.getPassword());
         
+        if(!authenticated){
+            throw new RuntimeException("Wrong Account Info");
+        }
+
         String token =generateToken(username);
         return token;
     }
@@ -54,5 +65,17 @@ public class AuthenticationService {
         }catch(JOSEException ex){
             throw new RuntimeException(ex);
         }
+    }
+
+    public boolean introspectToken(IntrospectRequest request) throws JOSEException, ParseException{
+        var token=request.getToken();
+
+        JWSVerifier jwsVerifier= new MACVerifier(SINGER_KEY.getBytes());
+
+        SignedJWT signedJWT= SignedJWT.parse(token);
+
+        Date experityTime=signedJWT.getJWTClaimsSet().getExpirationTime();
+        
+        return signedJWT.verify(jwsVerifier) & experityTime.after(new Date()); 
     }
 }
