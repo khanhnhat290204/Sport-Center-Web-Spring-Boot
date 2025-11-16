@@ -14,6 +14,8 @@ import com.nkn.SportCenter.entities.BookingStatus;
 import com.nkn.SportCenter.entities.Court;
 import com.nkn.SportCenter.entities.TimeSlot;
 import com.nkn.SportCenter.entities.User;
+import com.nkn.SportCenter.exception.AppException;
+import com.nkn.SportCenter.exception.ErrorCode;
 import com.nkn.SportCenter.mapper.BookingMapper;
 import com.nkn.SportCenter.repository.BookingRepository;
 import com.nkn.SportCenter.repository.CourtRepository;
@@ -58,7 +60,7 @@ public class BookingService {
     }
 
     public void updateBookingStatus(int id,BookingStatus status){
-        Booking booking=this.bookingRepo.findById(id).orElseThrow(()-> new RuntimeException("Booking not found"));
+        Booking booking=this.bookingRepo.findById(id).orElseThrow(()-> new AppException(ErrorCode.USER_EXIST));
         booking.setBooking_status(status);
         this.bookingRepo.save(booking);
     }

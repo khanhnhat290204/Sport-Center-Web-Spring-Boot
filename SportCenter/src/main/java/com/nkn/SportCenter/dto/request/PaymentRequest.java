@@ -8,7 +8,14 @@ public class PaymentRequest {
     private Booking booking;
     private PaymentStatus payment_status;
     private PaymentType paymentType;
+    private double total_price;
 
+    public double getTotal_price() {
+        return total_price;
+    }
+    public void setTotal_price(double total_price) {
+        this.total_price = total_price;
+    }
     public Booking getBooking() {
         return booking;
     }

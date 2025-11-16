@@ -4,12 +4,14 @@ import java.text.ParseException;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.StringJoiner;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
 
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.JWSAlgorithm;
@@ -43,17 +45,18 @@ public class AuthenticationService {
             throw new RuntimeException("Wrong Account Info");
         }
 
-        String token =generateToken(username);
+        String token =generateToken(user);
         return token;
     }
 
-    private String generateToken(String username){
+    private String generateToken(User user){
         JWSHeader header= new JWSHeader(JWSAlgorithm.HS512);
 
         JWTClaimsSet jwtClaimsSet=new JWTClaimsSet.Builder()
-                                .subject(username).issuer("devteria.com")
+                                .subject(user.getUsername()).issuer("sportcenter.com")
                                 .issueTime(new Date())
                                 .expirationTime(new Date(Instant.now().plus(1,ChronoUnit.HOURS).toEpochMilli()))
+                                .claim("scope", buildScope(user))
                                 .build();
         Payload payload= new Payload(jwtClaimsSet.toJSONObject());
 
@@ -77,5 +80,13 @@ public class AuthenticationService {
         Date experityTime=signedJWT.getJWTClaimsSet().getExpirationTime();
         
         return signedJWT.verify(jwsVerifier) & experityTime.after(new Date()); 
+    }
+
+    private String buildScope(User user){
+        StringJoiner stringJoiner=new StringJoiner(" ");
+        if(!CollectionUtils.isEmpty(user.getRoles())){
+            user.getRoles().forEach(r->stringJoiner.add(r));
+        }
+        return stringJoiner.toString();
     }
 }
